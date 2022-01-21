@@ -1,6 +1,9 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE DefaultSignatures #-}
+{-# LANGUAGE GADTs #-}
+{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE AllowAmbiguousTypes #-}
 
 {-# OPTIONS_GHC -Wall #-}
 
@@ -21,6 +24,23 @@ data Predicate =
   }
 
 data SuslikType = IntType | SetType | LocType
+
+data SuslikTypeS t where
+  IntTypeS :: SuslikTypeS 'IntType
+  SetTypeS :: SuslikTypeS 'SetType
+  LocTypeS :: SuslikTypeS 'LocType
+
+class SuslikSing t where
+  suslikSing :: SuslikTypeS t
+  suslikType :: SuslikType
+
+instance SuslikSing 'IntType where
+  suslikSing = IntTypeS
+  suslikType = IntType
+
+instance SuslikSing 'SetType where
+  suslikSing = SetTypeS
+  suslikType = SetType
 
 data VarDecl =
   MkVarDecl
